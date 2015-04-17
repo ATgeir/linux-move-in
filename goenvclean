@@ -1,0 +1,4 @@
+rm -rf $HOME/go
+rm $HOME/heisprosjekt
+rm $HOME/TTK4145
+rm $HOME/sanntid

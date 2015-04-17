@@ -1,0 +1,104 @@
+#Skal ikke være nødvendig
+#echo "# Lag .Xdefaults og .vimrc i tilfelle de ikke finnes fra før"
+#touch ~/.Xdefaults
+#touch ~/.vimrc
+
+# For at xterm skal lese ~/.bashrc
+# Ser ikke ut for å funke
+echo "XTerm*.LoginShell: True" >>~/.Xdefaults
+
+echo "# Lag mapper for go-miljøet"
+mkdir -p ~/go/src
+mkdir -p ~/go/bin
+
+echo "# Sett miljøvariabler for go"
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+
+mkdir -p $HOME/go/src/github.com/sigvartmh
+
+
+echo "# Klon prosjektet fra Sigvarts github"
+git clone https://github.com/sigvartmh/TTK4145-Project $GOPATH/src/github.com/sigvartmh/TTK4145-Project
+
+echo "# Klon sanntidsoppgavene fra Sigvarts github"
+git clone https://github.com/sigvartmh/TTK4145 $GOPATH/src/github.com/sigvartmh/TTK4145
+
+mkdir -p $GOPATH/src/github.com/TTK4145
+echo "# Klon sanntidsoppgavene fagets github"
+git clone https://github.com/TTK4145/Exercises $GOPATH/src/github.com/TTK4145/Exercises
+git clone https://github.com/TTK4145/Network-c $GOPATH/src/github.com/TTK4145/Network-c
+git clone https://github.com/TTK4145/Network-go $GOPATH/src/github.com/TTK4145/Network-go
+git clone https://github.com/TTK4145/Project $GOPATH/src/github.com/TTK4145/Project
+
+echo "# Lag symlinker fra home"
+ln -s $HOME/go/src/github.com/sigvartmh/TTK4145-Project ~/heisprosjekt
+ln -s $HOME/go/src/github.com/sigvartmh/TTK4145 ~/sanntid
+ln -s $HOME/go/src/github.com/TTK4145 ~/TTK4145
+
+echo "# Sett globale konfigurasjonsvariabler for git"
+git config --global user.email "kurt.kristian.lyngholm@gmail.com"
+git config --global user.name "ATgeir"
+git config --global core.editor "vim"
+
+echo "# Installér pathogen - en plugin manager for vim"
+mkdir -p ~/.vim/autoload
+mkdir -p ~/.vim/bundle
+curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
+
+echo "# Legg inn et grunnoppsett for vim (Bytt ut med egne innstillinger med tiden)"
+# Vet egentlig ikke hva dette tilfører - kuttet ut
+# git clone git://github.com/tpope/vim-sensible.git ~/.vim/bundle/vim-sensible
+git clone git://github.com/altercation/vim-colors-solarized.git ~/.vim/bundle/vim-colors-solarized
+
+echo "# Legg til en plugin for å få syntax highlighting for go-kildekode"
+git clone https://github.com/fatih/vim-go.git ~/.vim/bundle/vim-go
+
+echo "set t_Co=256
+let g:solarized_termcolors=256
+syntax enable
+set background=dark
+execute pathogen#infect()
+syntax on
+filetype plugin indent on
+syntax enable
+set background=dark
+colorscheme solarized" >>~/.vimrc
+
+echo "
+# Sett de 16 ANSI-fargene slik at de stemmer med solarized:
+# Solarized colors for the Linux terminal
+if [ \"$TERM\" = \"xterm\" ]; then
+echo -en \"\e]P0073642\" # black
+echo -en \"\e]PFfdf6e3\" # white
+echo -en \"\e]P8002b36\" # darkgrey
+echo -en \"\e]P7eee8d5\" # light grey
+echo -en \"\e]P1dc322f\" # darkred
+echo -en \"\e]P9cb4b16\" # red
+echo -en \"\e]P2859900\" # darkgreen
+echo -en \"\e]PA586e75\" # gren
+echo -en \"\e]P3b58900\" # brown
+echo -en \"\e]PB657b83\" # yellow
+echo -en \"\e]P4268bd2\" # darkblue
+echo -en \"\e]PC839496\" # blue
+echo -en \"\e]P5d33682\" # darkmagenta
+echo -en \"\e]PD6c71c4\" # magenta
+echo -en \"\e]P62aa198\" # darkcyan
+echo -en \"\e]PE93a1a1\" # cyan
+echo -en \"\e[2J\"
+echo -en
+clear # background artificats
+fi
+
+" >>~/.bashrc
+
+echo "# Åpne to nye x-termer"
+xterm -ls -xrm 'XTerm*selectToClipboard: true' &
+xterm -ls -xrm 'XTerm*selectToClipboard: true' &
+
+echo "# Åpne fagsiden i firefox"
+firefox https://github.com/TTK4145 &
+
+
+
+
